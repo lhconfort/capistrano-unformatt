@@ -13,3 +13,7 @@
 ## v0.4
 
 * Remove conflicting require and templating path not being set
+
+## v0.5
+
+* Fixes on spec
