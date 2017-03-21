@@ -1,6 +1,8 @@
 namespace :deploy do
   desc "Creates project files."
   task :install do
+    append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
+
     on roles :app do
       # yaml files
       execute "mkdir -p #{shared_path}/{config,tmp}"
