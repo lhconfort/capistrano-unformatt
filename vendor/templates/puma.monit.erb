@@ -1,0 +1,6 @@
+check process <%="#{fetch(:application)}-puma"%>
+  with pidfile <%="#{shared_path}/pids/puma.pid"%>
+  group <%=fetch(:application)%>
+  start program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-puma start"%>"
+    as uid <%=fetch(:monit_user)%> and gid <%=fetch(:monit_group)%>
+  stop program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-puma stop"%>"
