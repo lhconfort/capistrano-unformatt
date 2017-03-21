@@ -17,3 +17,7 @@
 ## v0.5
 
 * Fixes on spec
+
+## v0.6
+
+* Fixed capistrano recipes conflict
