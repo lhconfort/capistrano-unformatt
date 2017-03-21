@@ -1,9 +1,9 @@
-ENV['RAILS_ENV'] = 'production'
-worker_processes 4
+ENV['RAILS_ENV'] = '<%= fetch(:rails_env, 'production') %>'
+worker_processes <%= fetch(:app_server_workers, 4) %>
 
 listen "<%="#{fetch(:app_server_host)}:#{fetch(:app_server_port)}"%>", :backlog => 2048
 
-timeout 60
+timeout <%= fetch(:app_server_timeout, 60) %>
 
 working_directory "<%=current_path%>"
 

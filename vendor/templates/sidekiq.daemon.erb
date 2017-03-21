@@ -2,7 +2,7 @@
 
 # <%= "Start or stop #{fetch(:application)}-sidekiq" %>
 #
-# Matias Hick <me@unformatt.com.ar>
+# <%= fetch(:daemon_author_name) %>
 
 ### BEGIN INIT INFO
 # Provides:          <%= "#{fetch(:application)}-sidekiq" %>
@@ -34,7 +34,7 @@ case "$1" in
 
     if [ -z "$(getPID)" ]; then
       cd <%=current_path%>
-      bundle exec sidekiq -d -v -P $PIDFILE -e $RAILS_ENV -L <%= "#{shared_path}/log/sidekiq.log" %>
+      bundle exec sidekiq -d -v -c <%= fetch(:sidekiq_threads_quantity, 4) %> -g <%= fetch(:sidekiq_queue_label, fetch(:sidekiq_queue_name, fetch(:application))) %> -q <%= fetch(:sidekiq_queue_name, fetch(:application)) %> -P $PIDFILE -e $RAILS_ENV -L <%= "#{shared_path}/log/sidekiq.log" %>
 
       echo "started!"
     else

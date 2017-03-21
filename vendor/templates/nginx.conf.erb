@@ -4,7 +4,7 @@ upstream <%=fetch(:application)%> {
 
 <%- if fetch(:nginx_use_ssl) -%>
 server {
-  listen         80;
+  listen         <%= fetch(:nginx_http_port, 80) %>;
   server_name    <%=fetch(:nginx_server_names)%>;
   rewrite        ^ https://$server_name$request_uri? permanent;
 }
@@ -12,7 +12,7 @@ server {
 
 server {
   <%- if fetch(:nginx_use_ssl) -%>
-  listen 443;
+  listen <%= fetch(:nginx_https_port, 443) %>;
   ssl                 on;
   ssl_certificate <%=fetch(:nginx_ssl_certificate)%>;
   ssl_certificate_key <%=fetch(:nginx_ssl_private_key)%>;
@@ -30,8 +30,8 @@ server {
   error_log <%=shared_path%>/log/nginx-error.log;
   rewrite_log on;
 
-  client_max_body_size 4G;
-  keepalive_timeout 5;
+  client_max_body_size <%=fetch(:nginx_max_body_size, '4G')%>;
+  keepalive_timeout <%=fetch(:nginx_keepalive_timeout, '5')%>;
 
   if (-f $document_root/public/maintenance.html) {
     rewrite ^(.*)$ /public/maintenance.html;
@@ -62,9 +62,10 @@ server {
     <%- if fetch(:nginx_use_ssl) -%>
     proxy_set_header                 X-Forwarded-Proto https;
     <%- end -%>
-    proxy_headers_hash_bucket_size   1024;
-    proxy_headers_hash_max_size      512;
-    proxy_read_timeout               <%=fetch(:nginx_read_timeout)%>;
+    proxy_headers_hash_bucket_size   <%=fetch(:nginx_hash_bucket_size, 1024)%>;
+    proxy_headers_hash_max_size      <%=fetch(:nginx_hash_max_size, 512)%>;
+    proxy_read_timeout               <%=fetch(:nginx_read_timeout, 60)%>;
+    proxy_send_timeout               <%=fetch(:nginx_send_timeout, 60)%>;
     proxy_redirect                   off;
     proxy_pass                       http://<%=fetch(:application)%>;
     include                          proxy_params;

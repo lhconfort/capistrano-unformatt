@@ -1,14 +1,17 @@
 directory "<%=current_path%>"
-environment "production"
+environment "<%= fetch(:rails_env, 'production') %>"
 daemonize true
+
+worker_timeout <%= fetch(:app_server_timeout, 60) %>
+worker_boot_timeout <%= fetch(:app_server_timeout, fetch(:app_server_timeout, 60)) %>
 
 pidfile '<%="#{shared_path}/pids/puma.pid"%>'
 state_path '<%="#{shared_path}/pids/puma.state"%>'
 stdout_redirect "<%="#{shared_path}/log/puma.stdout.log"%>", "<%="#{shared_path}/log/puma.stderr.log"%>", true
 
-threads 0, 8
+threads <%= fetch(:app_server_min_threads, 0) %>, <%= fetch(:app_server_max_threads, 8) %>
 bind "<%="tcp://#{fetch(:app_server_host)}:#{fetch(:app_server_port)}"%>"
-workers 4
+workers <%= fetch(:app_server_workers, 4) %>
 
 preload_app!
 

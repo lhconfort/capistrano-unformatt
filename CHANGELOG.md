@@ -29,3 +29,11 @@
 ## v1.1
 
 * Fixed style on unicorn rb file
+
+## v1.2
+
+* Improvements on recipes
+
+## v1.3
+
+* Added configuration variables on templates
