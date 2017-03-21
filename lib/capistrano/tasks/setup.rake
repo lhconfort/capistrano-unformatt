@@ -1,5 +1,3 @@
-append :templating_paths, "capistrano/unformatt/vendor/templates"
-
 namespace :deploy do
   desc "Creates project files."
   task :install do
