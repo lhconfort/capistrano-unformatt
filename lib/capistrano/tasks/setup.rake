@@ -57,7 +57,7 @@ namespace :deploy do
       end
 
       if fetch(:erase_deploy_folder_on_uninstall, false) == true
-        execute "rm -rf #{fetch(:deploy_to)/*}"
+        execute "rm -rf #{fetch(:deploy_to)}"
       end
     end
   end
