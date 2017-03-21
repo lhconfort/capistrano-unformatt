@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "capistrano-unformatt"
-  spec.version       = '0.3'
+  spec.version       = '0.4'
   spec.authors       = ["unformatt"]
   spec.email         = ["unformatt@gmail.com"]
   spec.description   = "Custom recipes for Unformatt projects"
