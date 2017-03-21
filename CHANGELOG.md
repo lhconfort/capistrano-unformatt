@@ -25,3 +25,7 @@
 ## v1.0
 
 * Fixed mistype calling capistrano variable
+
+## v1.1
+
+* Fixed style on unicorn rb file
