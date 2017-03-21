@@ -4,4 +4,4 @@
 
 ## v0.2.0
 
-* Bugfix error
+* Bugfix on require
