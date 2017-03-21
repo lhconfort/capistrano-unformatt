@@ -1,4 +1,3 @@
-require 'capistrano/capistrano_plugin_template'
 require "capistrano/unformatt/monit"
 require "capistrano/unformatt/nginx"
 require "capistrano/unformatt/rails"
