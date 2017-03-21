@@ -21,3 +21,7 @@
 ## v0.6
 
 * Fixed capistrano recipes conflict
+
+## v1.0
+
+* Fixed mistype calling capistrano variable
