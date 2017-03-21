@@ -9,3 +9,7 @@
 ## v0.3
 
 * Bugfix on rake task
+
+## v0.4
+
+* Remove conflicting require and templating path not being set
