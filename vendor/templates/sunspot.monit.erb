@@ -1,6 +1,0 @@
-check process <%="#{fetch(:application)}-sunspot"%>
-  with pidfile <%="#{shared_path}/pids/sunspot-solr-production.pid"%>
-  group <%=fetch(:application)%>
-  start program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-sunspot start"%>"
-    as uid <%=fetch(:monit_user)%> and gid <%=fetch(:monit_group)%>
-  stop program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-sunspot stop"%>"
