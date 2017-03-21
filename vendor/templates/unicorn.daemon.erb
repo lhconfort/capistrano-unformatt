@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# <%= "Start or stop #{fetch(:application)}-unicorn" %>
+#
+# Matias Hick <me@unformatt.com.ar>
+
+### BEGIN INIT INFO
+# Provides:          <%= "#{fetch(:application)}-unicorn" %>
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:     $local_fs $remote_fs $syslog $network
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= "Starts #{fetch(:application)}-unicorn" %>
+# Description:       <%= "Launches #{fetch(:application)}-unicorn" %>
+### END INIT INFO
+
+PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PIDFILE=<%= "#{shared_path}/pids/unicorn.pid" %>
+export RAILS_ENV=production
+
+getPID() {
+  if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep -v grep) ]]; then
+      echo `cat $PIDFILE 2> /dev/null`
+    fi
+  fi
+}
+
+case "$1" in
+  start)
+    echo -ne "<%= "Starting #{fetch(:application)}-unicorn..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      cd <%=current_path%>
+      bundle exec unicorn -c <%= "#{shared_path}/config/unicorn.rb" %> -D
+
+      echo "started!"
+    else
+      echo "is already running!"
+    fi
+    ;;
+
+  stop)
+    echo -ne "<%= "Stopping #{fetch(:application)}-unicorn..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      kill -INT $(getPID) &> /dev/null
+
+      echo "stopped!"
+    fi
+    ;;
+
+  graceful_stop)
+    if [ -z "$(getPID)" ]; then
+      echo "<%= "#{fetch(:application)}-unicorn is not running!" %>"
+    else
+      kill -QUIT $(getPID) &> /dev/null
+
+      echo "<%= "#{fetch(:application)}-unicorn will stop after current request finishes." %>"
+    fi
+    ;;
+
+  restart)
+    $0 stop
+    sleep 3
+    $0 start
+    ;;
+
+  reload)
+    echo -ne "<%= "Reloading #{fetch(:application)}-unicorn..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      kill -USR2 $(getPID) &> /dev/null
+
+      echo "reloaded!"
+    fi
+    ;;
+
+  *)
+    echo "usage: $0 {start|stop|graceful_stop|restart|reload}"
+esac
+exit 0

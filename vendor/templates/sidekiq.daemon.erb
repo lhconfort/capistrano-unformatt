@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# <%= "Start or stop #{fetch(:application)}-sidekiq" %>
+#
+# Matias Hick <me@unformatt.com.ar>
+
+### BEGIN INIT INFO
+# Provides:          <%= "#{fetch(:application)}-sidekiq" %>
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:     $local_fs $remote_fs $syslog $network
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= "Starts #{fetch(:application)}-sidekiq" %>
+# Description:       <%= "Launches #{fetch(:application)}-sidekiq" %>
+### END INIT INFO
+
+PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PIDFILE=<%= "#{shared_path}/pids/sidekiq.pid" %>
+export RAILS_ENV=production
+
+getPID() {
+  if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep -v grep) ]]; then
+      echo `cat $PIDFILE 2> /dev/null`
+    fi
+  fi
+}
+
+case "$1" in
+  start)
+    echo -ne "<%= "Starting #{fetch(:application)}-sidekiq..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      cd <%=current_path%>
+      bundle exec sidekiq -d -v -P $PIDFILE -e $RAILS_ENV -L <%= "#{shared_path}/log/sidekiq.log" %>
+
+      echo "started!"
+    else
+      echo "is already running!"
+    fi
+    ;;
+
+  stop)
+    echo -ne "<%= "Stopping #{fetch(:application)}-sidekiq..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      kill -TERM $(getPID) &> /dev/null
+
+      echo "stopped!"
+    fi
+    ;;
+
+  restart)
+    $0 stop
+    sleep 3
+    $0 start
+    ;;
+
+  reject_jobs)
+    echo -ne "<%= "Rejecting new jobs #{fetch(:application)}-sidekiq..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      kill -USR1 $(getPID) &> /dev/null
+
+      echo "new jobs will be rejected"
+    fi
+    ;;
+
+  *)
+    echo "usage: $0 {start|stop|restart|reject_jobs}"
+esac
+exit 0

@@ -1,0 +1,21 @@
+directory "<%=current_path%>"
+environment "production"
+daemonize true
+
+pidfile '<%="#{shared_path}/pids/puma.pid"%>'
+state_path '<%="#{shared_path}/pids/puma.state"%>'
+stdout_redirect "<%="#{shared_path}/log/puma.stdout.log"%>", "<%="#{shared_path}/log/puma.stderr.log"%>", true
+
+threads 0, 8
+bind "<%="tcp://#{fetch(:app_server_host)}:#{fetch(:app_server_port)}"%>"
+workers 4
+
+preload_app!
+
+on_worker_boot do
+  ActiveSupport.on_load(:active_record) do
+    ActiveRecord::Base.establish_connection
+  end
+end
+
+

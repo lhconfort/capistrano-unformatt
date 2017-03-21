@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# <%= "Start or stop #{fetch(:application)}-sunspot" %>
+#
+# Matias Hick <me@unformatt.com.ar>
+
+### BEGIN INIT INFO
+# Provides:          <%= "#{fetch(:application)}-sunspot" %>
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:     $local_fs $remote_fs $syslog $network
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= "Starts #{fetch(:application)}-sunspot" %>
+# Description:       <%= "Launches #{fetch(:application)}-sunspot" %>
+### END INIT INFO
+
+PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PIDFILE=<%= "#{shared_path}/pids/sunspot-solr.pid" %>
+export RAILS_ENV=production
+
+getPID() {
+  if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep -v grep) ]]; then
+      echo `cat $PIDFILE 2> /dev/null`
+    fi
+  fi
+}
+
+case "$1" in
+  start)
+    echo -ne "<%= "Starting #{fetch(:application)}-sunspot..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      cd <%=current_path%>
+      bundle exec rake sunspot:solr:start
+
+      echo "started!"
+    else
+      echo "is already running!"
+    fi
+    ;;
+
+  stop)
+    echo -ne "<%= "Stopping #{fetch(:application)}-sunspot..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      cd <%=current_path%>
+      bundle exec rake sunspot:solr:stop
+
+      echo "stopped!"
+    fi
+    ;;
+
+  reindex)
+    echo -ne "<%= "Reindexing #{fetch(:application)}-sunspot..." %>"
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      cd <%=current_path%>
+      bundle exec rake sunspot:solr:reindex
+    fi
+    ;;
+
+  restart)
+    $0 stop
+    $0 start
+    ;;
+
+  *)
+    echo "usage: $0 {start|stop|restart|reindex}"
+esac
+exit 0

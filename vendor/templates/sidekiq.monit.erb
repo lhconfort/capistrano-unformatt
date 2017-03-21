@@ -1,0 +1,6 @@
+check process <%="#{fetch(:application)}-sidekiq"%>
+  with pidfile <%="#{shared_path}/pids/sidekiq.pid"%>
+  group <%=fetch(:application)%>
+  start program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-sidekiq start"%>"
+    as uid <%=fetch(:monit_user)%> and gid <%=fetch(:monit_group)%>
+  stop program = "<%="#{fetch(:daemons_path)}/#{fetch(:application)}-sidekiq stop"%>"
