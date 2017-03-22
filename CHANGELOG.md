@@ -57,3 +57,7 @@
 ## v1.8
 
 * Remove configuration reloads from setup
+
+## v1.9
+
+* Added defaults for setup tasks
