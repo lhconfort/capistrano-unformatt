@@ -61,3 +61,7 @@
 ## v1.9
 
 * Added defaults for setup tasks
+
+## v1.10
+
+* Improved configuration for nginx
