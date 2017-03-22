@@ -73,3 +73,7 @@
 ## v1.12
 
 * Replaced present method not working on strings
+
+## v1.13
+
+* Fix extra space on nginx conf template
