@@ -7,32 +7,38 @@ namespace :deploy do
       # yaml files
       execute "mkdir -p #{shared_path}/{config,tmp}"
 
-      fetch(:setup_yamls, []).each do |yaml|
-        template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
+      unless ENV['SKIP_YAML'] == 'true'
+        fetch(:setup_yamls, []).each do |yaml|
+          template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
+        end
       end
 
-      fetch(:setup_daemons, []).each do |daemon|
-        if daemon[:config] == true
-          template "#{daemon[:name]}.rb.erb", "#{shared_path}/config/#{daemon[:name]}.rb", 0644
+      unless ENV['SKIP_DAEMONS'] == 'true'
+        fetch(:setup_daemons, []).each do |daemon|
+          if daemon[:config] == true
+            template "#{daemon[:name]}.rb.erb", "#{shared_path}/config/#{daemon[:name]}.rb", 0644
+          end
+
+          template "#{daemon[:name]}.daemon.erb", "#{shared_path}/tmp/#{daemon[:name]}.daemon", 0755
+          execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
+
+          template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
+          execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
         end
 
-        template "#{daemon[:name]}.daemon.erb", "#{shared_path}/tmp/#{daemon[:name]}.daemon", 0755
-        execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
-
-        template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
-        execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
+        execute "sudo service monit reload"
       end
-
-      execute "sudo service monit reload"
     end
 
-    if fetch(:setup_nginx, false) == true
-      on roles :web do
-        execute "mkdir -p #{fetch(:deploy_to)}"
-        template "nginx.conf.erb", "#{shared_path}/tmp/nginx.conf", 0644
-        execute "sudo mv -f #{shared_path}/tmp/nginx.conf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)}"
-        execute "sudo ln -snf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)} #{fetch(:nginx_path)}/sites-enabled/#{fetch(:application)}"
-        execute "sudo service nginx reload"
+    unless ENV['SKIP_NGINX'] == 'true'
+      if fetch(:setup_nginx, false) == true
+        on roles :web do
+          execute "mkdir -p #{fetch(:deploy_to)}"
+          template "nginx.conf.erb", "#{shared_path}/tmp/nginx.conf", 0644
+          execute "sudo mv -f #{shared_path}/tmp/nginx.conf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)}"
+          execute "sudo ln -snf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)} #{fetch(:nginx_path)}/sites-enabled/#{fetch(:application)}"
+          execute "sudo service nginx reload"
+        end
       end
     end
   end
@@ -47,13 +53,13 @@ namespace :deploy do
       end
 
       if fetch(:setup_daemons, []).any?
-        execute "sudo service monit reload"
+        execute "sudo service monit reload", raise_on_non_zero_exit: false
       end
 
       if fetch(:setup_nginx, false) == true
         execute "sudo rm -f /etc/nginx/sites_available/#{fetch(:application)}"
         execute "sudo rm -f /etc/nginx/sites_enabled/#{fetch(:application)}"
-        execute "sudo service nginx reload"
+        execute "sudo service nginx reload", raise_on_non_zero_exit: false
       end
 
       if fetch(:erase_deploy_folder_on_uninstall, false) == true

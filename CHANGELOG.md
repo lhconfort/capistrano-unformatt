@@ -45,3 +45,7 @@
 ## v1.5
 
 * Changes on sidekiq method to reject new jobs
+
+## v1.6
+
+* Added options on setup to skip some configurations
