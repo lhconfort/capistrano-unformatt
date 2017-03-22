@@ -9,7 +9,7 @@ namespace :deploy do
 
     desc "Starts applications"
     task :start do
-      if ENV['DAEMONS'].present?
+      if ENV['DAEMONS'].to_s != ''
         on roles :app do
           ENV['DAEMONS'].split(',').each do |daemon|
             execute "sudo monit start #{fetch(:application)}-#{daemon}"
@@ -22,7 +22,7 @@ namespace :deploy do
 
     desc "Stops applications"
     task :stop do
-      if ENV['DAEMONS'].present?
+      if ENV['DAEMONS'].to_s != ''
         on roles :app do
           ENV['DAEMONS'].split(',').each do |daemon|
             execute "sudo monit stop #{fetch(:application)}-#{daemon}"
@@ -35,7 +35,7 @@ namespace :deploy do
 
     desc "Restarts applications"
     task :restart do
-      if ENV['DAEMONS'].present?
+      if ENV['DAEMONS'].to_s != ''
         on roles :app do
           ENV['DAEMONS'].split(',').each do |daemon|
             execute "sudo monit restart #{fetch(:application)}-#{daemon}"
@@ -48,7 +48,7 @@ namespace :deploy do
 
     desc "Starts monitoring applications"
     task :monitor do
-      if ENV['DAEMONS'].present?
+      if ENV['DAEMONS'].to_s != ''
         on roles :app do
           ENV['DAEMONS'].split(',').each do |daemon|
             execute "sudo monit monitor #{fetch(:application)}-#{daemon}"
@@ -61,7 +61,7 @@ namespace :deploy do
 
     desc "Stops monitoring applications"
     task :unmonitor do
-      if ENV['DAEMONS'].present?
+      if ENV['DAEMONS'].to_s != ''
         on roles :app do
           ENV['DAEMONS'].split(',').each do |daemon|
             execute "sudo monit unmonitor #{fetch(:application)}-#{daemon}"

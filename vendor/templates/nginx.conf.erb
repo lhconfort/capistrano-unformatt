@@ -69,7 +69,7 @@ server {
   ssl_session_cache shared:SSL:10m;
   ssl_session_timeout  5m;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-  <%- if fetch(:nginx_ssl_ciphers,'').present? -%>
+  <%- if fetch(:nginx_ssl_ciphers,'') != '' -%>
   ssl_ciphers "<%= fetch(:nginx_ssl_ciphers) %>";
   ssl_prefer_server_ciphers   on;
   ssl_dhparam <%= fetch(:nginx_dhparams_path, '/etc/ssl/private/dhparams.pem') %>;

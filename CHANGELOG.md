@@ -69,3 +69,7 @@
 ## v1.11
 
 * Improved configuration for nginx
+
+## v1.12
+
+* Replaced present method not working on strings
