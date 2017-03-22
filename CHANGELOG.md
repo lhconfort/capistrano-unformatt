@@ -53,3 +53,7 @@
 ## v1.7
 
 * Fix on plural for config on setup variable
+
+## v1.8
+
+* Remove configuration reloads from setup

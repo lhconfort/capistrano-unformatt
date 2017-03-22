@@ -25,8 +25,6 @@ namespace :deploy do
           template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
           execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
         end
-
-        execute "sudo service monit reload"
       end
     end
 
@@ -37,7 +35,6 @@ namespace :deploy do
           template "nginx.conf.erb", "#{shared_path}/tmp/nginx.conf", 0644
           execute "sudo mv -f #{shared_path}/tmp/nginx.conf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)}"
           execute "sudo ln -snf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)} #{fetch(:nginx_path)}/sites-enabled/#{fetch(:application)}"
-          execute "sudo service nginx reload"
         end
       end
     end
@@ -52,14 +49,9 @@ namespace :deploy do
         execute "sudo rm -f /etc/monit/conf.d/#{fetch(:application)}-#{daemon[:name]}"
       end
 
-      if fetch(:setup_daemons, []).any?
-        execute "sudo service monit reload", raise_on_non_zero_exit: false
-      end
-
       if fetch(:setup_nginx, false) == true
         execute "sudo rm -f /etc/nginx/sites_available/#{fetch(:application)}"
         execute "sudo rm -f /etc/nginx/sites_enabled/#{fetch(:application)}"
-        execute "sudo service nginx reload", raise_on_non_zero_exit: false
       end
 
       if fetch(:erase_deploy_folder_on_uninstall, false) == true
