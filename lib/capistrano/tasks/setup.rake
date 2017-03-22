@@ -17,10 +17,10 @@ namespace :deploy do
         end
 
         template "#{daemon[:name]}.daemon.erb", "#{shared_path}/tmp/#{daemon[:name]}.daemon", 0755
-        execute "sudo mv #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
+        execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
 
         template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
-        execute "sudo mv #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
+        execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
       end
 
       execute "sudo service monit reload"
@@ -30,7 +30,7 @@ namespace :deploy do
       on roles :web do
         execute "mkdir -p #{fetch(:deploy_to)}"
         template "nginx.conf.erb", "#{shared_path}/tmp/nginx.conf", 0644
-        execute "sudo mv #{shared_path}/tmp/nginx.conf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)}"
+        execute "sudo mv -f #{shared_path}/tmp/nginx.conf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)}"
         execute "sudo ln -snf #{fetch(:nginx_path)}/sites-available/#{fetch(:application)} #{fetch(:nginx_path)}/sites-enabled/#{fetch(:application)}"
         execute "sudo service nginx reload"
       end

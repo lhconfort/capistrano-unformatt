@@ -37,3 +37,7 @@
 ## v1.3
 
 * Added configuration variables on templates
+
+## v1.4
+
+* Move files without prompt overwrite on setup
