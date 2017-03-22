@@ -22,9 +22,9 @@ namespace :deploy do
     end
 
     desc "Rejects new sidekiq jobs"
-    task :reject_jobs do
+    task :reject_new_jobs do
       on roles :app do
-        execute "#{fetch(:daemons_path)}/#{fetch(:application)}-sidekiq reject_jobs"
+        execute "#{fetch(:daemons_path)}/#{fetch(:application)}-sidekiq reject_new_jobs"
       end
     end
   end

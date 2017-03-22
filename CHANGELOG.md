@@ -41,3 +41,7 @@
 ## v1.4
 
 * Move files without prompt overwrite on setup
+
+## v1.5
+
+* Changes on sidekiq method to reject new jobs

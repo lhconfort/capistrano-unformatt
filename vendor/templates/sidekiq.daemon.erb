@@ -60,7 +60,7 @@ case "$1" in
     $0 start
     ;;
 
-  reject_jobs)
+  reject_new_jobs)
     echo -ne "<%= "Rejecting new jobs #{fetch(:application)}-sidekiq..." %>"
 
     if [ -z "$(getPID)" ]; then
@@ -73,6 +73,6 @@ case "$1" in
     ;;
 
   *)
-    echo "usage: $0 {start|stop|restart|reject_jobs}"
+    echo "usage: $0 {start|stop|restart|reject_new_jobs}"
 esac
 exit 0
