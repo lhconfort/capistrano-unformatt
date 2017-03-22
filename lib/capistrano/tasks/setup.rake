@@ -7,7 +7,7 @@ namespace :deploy do
       # yaml files
       execute "mkdir -p #{shared_path}/{config,tmp}"
 
-      unless ENV['SKIP_YAML'] == 'true'
+      unless ENV['SKIP_YAMLS'] == 'true'
         fetch(:setup_yamls, []).each do |yaml|
           template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
         end

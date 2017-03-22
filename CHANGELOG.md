@@ -49,3 +49,7 @@
 ## v1.6
 
 * Added options on setup to skip some configurations
+
+## v1.7
+
+* Fix on plural for config on setup variable
