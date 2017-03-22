@@ -65,3 +65,7 @@
 ## v1.10
 
 * Improved configuration for nginx
+
+## v1.11
+
+* Improved configuration for nginx

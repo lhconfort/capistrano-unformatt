@@ -12,7 +12,7 @@ upstream <%=fetch(:application)%> {
   <%- else -%>
   server {
     listen <%= fetch(:nginx_http_port, 80) %>;
-    server_name <%=fetch(:nginx_server_names)%>;
+    server_name <%=fetch(:nginx_http_server_names,fetch(:nginx_server_names))%>;
     root <%=current_path%>/public;
     access_log <%=fetch(:nginx_access_log, "#{shared_path}/log/nginx-access.log") %>;
     error_log <%=fetch(:nginx_error_log, "#{shared_path}/log/nginx-error.log")%>;
@@ -75,7 +75,7 @@ server {
   ssl_dhparam <%= fetch(:nginx_dhparams_path, '/etc/ssl/private/dhparams.pem') %>;
   <%- end -%>
 
-  server_name <%=fetch(:nginx_server_names)%>;
+  server_name <%=fetch(:nginx_https_server_names,fetch(:nginx_server_names))%>;
   root <%=current_path%>/public;
   access_log <%=fetch(:nginx_access_log, "#{shared_path}/log/nginx-access.log") %>;
   error_log <%=fetch(:nginx_error_log, "#{shared_path}/log/nginx-error.log")%>;
