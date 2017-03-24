@@ -77,3 +77,7 @@
 ## v1.13
 
 * Fix extra space on nginx conf template
+
+## v1.14
+
+* Create pids and log folders on cap install

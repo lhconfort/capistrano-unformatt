@@ -4,9 +4,9 @@ namespace :deploy do
     append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
 
     on roles :app do
-      # yaml files
-      execute "mkdir -p #{shared_path}/{config,tmp}"
+      execute "mkdir -p #{shared_path}/{config,tmp,log,pids}"
 
+      # yaml files
       unless ENV['SKIP_YAMLS'] == 'true'
         fetch(:setup_yamls, []).each do |yaml|
           template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
