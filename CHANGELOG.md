@@ -81,3 +81,7 @@
 ## v1.14
 
 * Create pids and log folders on cap install
+
+## v1.14.1
+
+* Added description to rails seed task

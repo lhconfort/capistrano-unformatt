@@ -1,5 +1,6 @@
 namespace :deploy do
   namespace :rails do
+    desc "Executes rake db:seed on project"
     task :seed do
       on roles :app do
         within current_path do
