@@ -85,3 +85,7 @@
 ## v1.14.1
 
 * Added description to rails seed task
+
+## v1.15
+
+* Fix on templates

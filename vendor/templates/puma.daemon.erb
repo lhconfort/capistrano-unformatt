@@ -16,7 +16,7 @@
 # Description:       <%= "Launches #{fetch(:application)}-puma" %>
 ### END INIT INFO
 
-PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PATH=/home/<%=fetch(:monit_user)%>/.rbenv/shims:/home/<%=fetch(:monit_user)%>/.rbenv/bin:$PATH
 PIDFILE=<%= "#{shared_path}/pids/puma.pid" %>
 export RAILS_ENV=production
 

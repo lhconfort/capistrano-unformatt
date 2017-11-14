@@ -16,7 +16,7 @@
 # Description:       <%= "Launches #{fetch(:application)}-sidekiq" %>
 ### END INIT INFO
 
-PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PATH=/home/<%=fetch(:monit_user)%>/.rbenv/shims:/home/<%=fetch(:monit_user)%>/.rbenv/bin:$PATH
 PIDFILE=<%= "#{shared_path}/pids/sidekiq.pid" %>
 export RAILS_ENV=production
 

@@ -16,7 +16,7 @@
 # Description:       <%= "Launches #{fetch(:application)}-sunspot" %>
 ### END INIT INFO
 
-PATH=/home/maintainer/.rbenv/shims:/home/maintainer/.rbenv/bin:$PATH
+PATH=/home/<%=fetch(:monit_user)%>/.rbenv/shims:/home/<%=fetch(:monit_user)%>/.rbenv/bin:$PATH
 PIDFILE=<%= "#{shared_path}/pids/sunspot-solr.pid" %>
 export RAILS_ENV=production
 

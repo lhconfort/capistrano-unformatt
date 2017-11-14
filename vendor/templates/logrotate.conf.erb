@@ -1,0 +1,11 @@
+<%=shared_path%>/log/*.log {
+  daily
+  missingok
+  size 200M
+  maxsize 200M
+  rotate 7
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}
