@@ -89,3 +89,7 @@
 ## v1.15
 
 * Fix on templates
+
+## v1.16
+
+* Added puma recipes
