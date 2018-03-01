@@ -14,7 +14,7 @@ namespace :deploy do
       end
     end
 
-    desc "Starts unicorn"
+    desc "Restarts unicorn"
     task :restart do
       on roles :app do
         execute "#{fetch(:daemons_path)}/#{fetch(:application)}-unicorn restart"

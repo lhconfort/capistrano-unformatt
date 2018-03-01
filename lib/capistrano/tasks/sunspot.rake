@@ -14,7 +14,7 @@ namespace :deploy do
       end
     end
 
-    desc "Starts sunspot"
+    desc "Restarts sunspot"
     task :restart do
       on roles :app do
         execute "#{fetch(:daemons_path)}/#{fetch(:application)}-sunspot restart"
