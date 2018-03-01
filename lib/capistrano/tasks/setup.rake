@@ -1,39 +1,41 @@
 namespace :deploy do
   namespace :install do
-    namespace :yml do
-      fetch(:setup_yamls, []).each do |yaml|
-        desc "Creates yaml file for #{yaml}."
-        task yaml do
-          append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
+    desc "Creates config for yml"
+    task :yaml, :command do |task, args|
+      append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
 
-          on roles :app do
-            execute "mkdir -p #{shared_path}/{config,tmp,log,pids}"
+      on roles :app do
+        execute "mkdir -p #{shared_path}/{config,tmp,log,pids}"
 
-            template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
-          end
+        yamls = fetch(:setup_yamls, [])
+        yamls.keep_if { |x| args[:command].split('/').map(&:strip).include?(x.to_s) }
+
+        yamls.each do |yaml|
+          template "#{yaml}.yml.erb", "#{shared_path}/config/#{yaml}.yml"
         end
       end
     end
 
-    namespace :daemon do
-      fetch(:setup_daemons, []).each do |daemon|
-        desc "Creates daemon files for #{daemon}."
-        task daemon do
-          append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
+    desc "Creates config for daemon"
+    task :daemon, :command do |task, args|
+      append :templating_paths, File.expand_path('../../../vendor/templates', File.dirname(__FILE__))
 
-          on roles :app do
-            execute "mkdir -p #{shared_path}/{config,tmp,log,pids}"
+      on roles :app do
+        execute "mkdir -p #{shared_path}/{config,tmp,log,pids}"
 
-            if daemon[:config] == true
-              template "#{daemon[:name]}.rb.erb", "#{shared_path}/config/#{daemon[:name]}.rb", 0644
-            end
+        daemons = fetch(:setup_daemons, [])
+        daemons.keep_if { |x| args[:command].split('/').map(&:strip).include?(x[:name].to_s) }
 
-            template "#{daemon[:name]}.daemon.erb", "#{shared_path}/tmp/#{daemon[:name]}.daemon", 0755
-            execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
-
-            template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
-            execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
+        daemons.each do |daemon|
+          if daemon[:config] == true
+            template "#{daemon[:name]}.rb.erb", "#{shared_path}/config/#{daemon[:name]}.rb", 0644
           end
+
+          template "#{daemon[:name]}.daemon.erb", "#{shared_path}/tmp/#{daemon[:name]}.daemon", 0755
+          execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.daemon #{fetch(:daemons_path)}/#{fetch(:application)}-#{daemon[:name]}"
+
+          template "#{daemon[:name]}.monit.erb", "#{shared_path}/tmp/#{daemon[:name]}.monit", 0644
+          execute "sudo mv -f #{shared_path}/tmp/#{daemon[:name]}.monit #{fetch(:monit_scripts_path)}/#{fetch(:application)}-#{daemon[:name]}"
         end
       end
     end
@@ -54,15 +56,13 @@ namespace :deploy do
     desc "Creates all project files."
     task :all do
       unless ENV['SKIP_YAMLS'] == 'true'
-        fetch(:setup_yamls, []).each do |yaml|
-          invoke "deploy:install:yml:#{yaml}"
-        end
+        yaml_names_param = fetch(:setup_yamls, []).map { |x| x.to_s }.join('/')
+        invoke "deploy:install:yaml[#{yaml_names_param}]"
       end
 
       unless ENV['SKIP_DAEMONS'] == 'true'
-        fetch(:setup_daemons, []).each do |daemon|
-          invoke "deploy:install:daemon:#{daemon}"
-        end
+        daemon_names_param = fetch(:setup_daemons, []).map { |x| x[:name].to_s }.join('/')
+        invoke "deploy:install:daemon[#{daemon_names_param}]"
       end
 
       if fetch(:setup_nginx, false) == true

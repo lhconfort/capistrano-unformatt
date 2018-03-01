@@ -97,3 +97,7 @@
 ## v2.0
 
 * Added methods for partial setup, improved check on daemon services
+
+## v2.1
+
+* Fixes on deploy install, improved methods for partial setup
