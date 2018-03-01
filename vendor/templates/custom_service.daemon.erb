@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# <%= "Start or stop #{fetch(:application)}-custom_service" %>
+#
+# <%= fetch(:daemon_author_name) %>
+
+### BEGIN INIT INFO
+# Provides:          <%= "#{fetch(:application)}-custom_service" %>
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:     $local_fs $remote_fs $syslog $network
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: <%= "Starts #{fetch(:application)}-custom_service" %>
+# Description:       <%= "Launches #{fetch(:application)}-custom_service" %>
+### END INIT INFO
+
+PATH=/home/<%=fetch(:monit_user)%>/.rbenv/shims:/home/<%=fetch(:monit_user)%>/.rbenv/bin:$PATH
+PIDFILE=<%= "#{shared_path}/pids/custom_service.pid" %>
+export RAILS_ENV=production
+
+getPID() {
+  if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep custom_service | grep -v grep) ]]; then
+      echo `cat $PIDFILE 2> /dev/null`
+    fi
+  fi
+}
+
+case "$1" in
+  start)
+    echo -ne "<%= "Starting #{fetch(:application)}-custom_service..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      cd <%=current_path%>
+      nohup bundle exec rake custom_service:start &> /dev/null &
+
+      echo "started!"
+    else
+      echo "is already running!"
+    fi
+    ;;
+
+  stop)
+    echo -ne "<%= "Stopping #{fetch(:application)}-custom_service..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      cd <%=current_path%>
+      kill -TERM $(getPID) &> /dev/null
+
+      echo "stopped!"
+    fi
+    ;;
+
+  restart)
+    $0 stop
+    sleep 3
+    $0 start
+    ;;
+
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
+    ;;
+
+  *)
+    echo "usage: $0 {start|stop|restart|check_pid}"
+esac
+exit 0
