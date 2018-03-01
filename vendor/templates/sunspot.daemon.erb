@@ -17,12 +17,12 @@
 ### END INIT INFO
 
 PATH=/home/<%=fetch(:monit_user)%>/.rbenv/shims:/home/<%=fetch(:monit_user)%>/.rbenv/bin:$PATH
-PIDFILE=<%= "#{shared_path}/pids/sunspot-solr.pid" %>
+PIDFILE=<%= "#{shared_path}/pids/sunspot-solr-production.pid" %>
 export RAILS_ENV=production
 
 getPID() {
   if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
-    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep -v grep) ]]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE`| grep solr | grep -v grep) ]]; then
       echo `cat $PIDFILE 2> /dev/null`
     fi
   fi
@@ -55,6 +55,17 @@ case "$1" in
     fi
     ;;
 
+  restart)
+    $0 stop
+    $0 start
+    ;;
+
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
+    ;;
+
   reindex)
     echo -ne "<%= "Reindexing #{fetch(:application)}-sunspot..." %>"
     if [ -z "$(getPID)" ]; then
@@ -63,11 +74,6 @@ case "$1" in
       cd <%=current_path%>
       bundle exec rake sunspot:solr:reindex
     fi
-    ;;
-
-  restart)
-    $0 stop
-    $0 start
     ;;
 
   *)

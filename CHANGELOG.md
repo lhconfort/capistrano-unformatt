@@ -93,3 +93,7 @@
 ## v1.16
 
 * Added puma recipes
+
+## v2.0
+
+* Added methods for partial setup, improved check on daemon services

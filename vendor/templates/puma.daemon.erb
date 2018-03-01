@@ -22,7 +22,7 @@ export RAILS_ENV=production
 
 getPID() {
   if [ ! -z `cat $PIDFILE 2> /dev/null` ]; then
-    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep -v grep) ]]; then
+    if [[ ! -z $(ps -ef | grep -w `cat $PIDFILE` | grep puma | grep -v grep) ]]; then
       echo `cat $PIDFILE 2> /dev/null`
     fi
   fi
@@ -59,6 +59,12 @@ case "$1" in
     $0 stop
     sleep 3
     $0 start
+    ;;
+
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
     ;;
 
   *)
