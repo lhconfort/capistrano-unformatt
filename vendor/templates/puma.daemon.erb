@@ -67,6 +67,18 @@ case "$1" in
     fi
     ;;
 
+  reload)
+    echo -ne "<%= "Reloading #{fetch(:application)}puma..." %>"
+
+    if [ -z "$(getPID)" ]; then
+      echo "is not running!"
+    else
+      kill -USR2 $(getPID) &> /dev/null
+
+      echo "reloaded!"
+    fi
+    ;;
+
   *)
     echo "usage: $0 {start|stop|restart}"
 esac

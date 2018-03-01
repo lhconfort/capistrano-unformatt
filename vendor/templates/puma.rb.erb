@@ -9,7 +9,7 @@ pidfile '<%="#{shared_path}/pids/puma.pid"%>'
 state_path '<%="#{shared_path}/pids/puma.state"%>'
 stdout_redirect "<%="#{shared_path}/log/puma.stdout.log"%>", "<%="#{shared_path}/log/puma.stderr.log"%>", true
 
-threads <%= fetch(:app_server_min_threads, 0) %>, <%= fetch(:app_server_max_threads, 8) %>
+threads <%= fetch(:app_server_min_threads, 0) %>, <%= fetch(:app_server_max_threads, 4) %>
 bind "<%="tcp://#{fetch(:app_server_host)}:#{fetch(:app_server_port)}"%>"
 workers <%= fetch(:app_server_workers, 4) %>
 
@@ -20,5 +20,3 @@ on_worker_boot do
     ActiveRecord::Base.establish_connection
   end
 end
-
-

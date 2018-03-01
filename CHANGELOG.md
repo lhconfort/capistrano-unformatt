@@ -101,3 +101,7 @@
 ## v2.1
 
 * Fixes on deploy install, improved methods for partial setup
+
+## v2.2
+
+* Added method to reload on puma daemon
