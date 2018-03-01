@@ -105,3 +105,7 @@
 ## v2.2
 
 * Added method to reload on puma daemon
+
+## v2.3
+
+* Improved documentation on daemons

@@ -60,12 +60,6 @@ case "$1" in
     $0 start
     ;;
 
-  check_pid)
-    if [ -z "$(getPID)" ]; then
-      > $PIDFILE
-    fi
-    ;;
-
   reindex)
     echo -ne "<%= "Reindexing #{fetch(:application)}-sunspot..." %>"
     if [ -z "$(getPID)" ]; then
@@ -76,7 +70,13 @@ case "$1" in
     fi
     ;;
 
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
+    ;;
+
   *)
-    echo "usage: $0 {start|stop|restart|reindex}"
+    echo "usage: $0 {start|stop|restart|reindex|check_pid}"
 esac
 exit 0

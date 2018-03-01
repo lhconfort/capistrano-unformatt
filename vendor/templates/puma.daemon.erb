@@ -61,12 +61,6 @@ case "$1" in
     $0 start
     ;;
 
-  check_pid)
-    if [ -z "$(getPID)" ]; then
-      > $PIDFILE
-    fi
-    ;;
-
   reload)
     echo -ne "<%= "Reloading #{fetch(:application)}puma..." %>"
 
@@ -79,7 +73,13 @@ case "$1" in
     fi
     ;;
 
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
+    ;;
+
   *)
-    echo "usage: $0 {start|stop|restart}"
+    echo "usage: $0 {start|stop|restart|reload|check_pid}"
 esac
 exit 0

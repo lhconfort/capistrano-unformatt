@@ -70,12 +70,6 @@ case "$1" in
     $0 start
     ;;
 
-  check_pid)
-    if [ -z "$(getPID)" ]; then
-      > $PIDFILE
-    fi
-    ;;
-
   reload)
     echo -ne "<%= "Reloading #{fetch(:application)}-unicorn..." %>"
 
@@ -88,7 +82,13 @@ case "$1" in
     fi
     ;;
 
+  check_pid)
+    if [ -z "$(getPID)" ]; then
+      > $PIDFILE
+    fi
+    ;;
+
   *)
-    echo "usage: $0 {start|stop|graceful_stop|restart|reload}"
+    echo "usage: $0 {start|stop|graceful_stop|restart|reload|check_pid}"
 esac
 exit 0
