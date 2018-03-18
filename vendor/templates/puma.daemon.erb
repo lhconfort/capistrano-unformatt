@@ -62,7 +62,7 @@ case "$1" in
     ;;
 
   reload)
-    echo -ne "<%= "Reloading #{fetch(:application)}puma..." %>"
+    echo -ne "<%= "Reloading #{fetch(:application)}-puma..." %>"
 
     if [ -z "$(getPID)" ]; then
       echo "is not running!"
