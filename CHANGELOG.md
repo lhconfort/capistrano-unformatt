@@ -109,3 +109,7 @@
 ## v2.3
 
 * Improved documentation on daemons
+
+## v2.4
+
+* Fixes on method to install all

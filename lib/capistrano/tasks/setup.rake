@@ -57,16 +57,16 @@ namespace :deploy do
     task :all do
       unless ENV['SKIP_YAMLS'] == 'true'
         yaml_names_param = fetch(:setup_yamls, []).map { |x| x.to_s }.join('/')
-        invoke "deploy:install:yaml[#{yaml_names_param}]"
+        invoke 'deploy:install:yaml', yaml_names_param
       end
 
       unless ENV['SKIP_DAEMONS'] == 'true'
         daemon_names_param = fetch(:setup_daemons, []).map { |x| x[:name].to_s }.join('/')
-        invoke "deploy:install:daemon[#{daemon_names_param}]"
+        invoke 'deploy:install:daemon', daemon_names_param
       end
 
       if fetch(:setup_nginx, false) == true
-        invoke "deploy:install:nginx"
+        invoke 'deploy:install:nginx'
       end
     end
   end
